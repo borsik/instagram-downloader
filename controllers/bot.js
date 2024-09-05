@@ -14,19 +14,22 @@ bot.onText(/\/start/, (msg) => {
 });
 
 bot.on('message', async (msg) => {
-  if (msg.text !== '/start' && msg.text.includes('https://www.instagram.com/')) {
+  if (msg?.text !== '/start' && msg?.text?.includes('https://www.instagram.com/')) {
     try {
-      bot.sendMessage(msg.chat.id, 'Processing your link, please wait...')
+      // bot.sendMessage(msg.chat.id, 'Processing your link, please wait...')
       const post = await instaScrapper(msg.text)
       console.log(post);
       const chatId = msg.chat.id;
       if (post.length > 0) {
+        opts = {
+          "reply_to_message_id": msg.message_id
+        }
         post.forEach(media => {
           if (media.type === 'image') {
-            bot.sendPhoto(chatId, media.link);
+            bot.sendPhoto(chatId, media.link, opts);
           }
           else if (media.type === 'video') {
-            bot.sendVideo(chatId, media.link);
+            bot.sendVideo(chatId, media.link, opts);
           } else {
             bot.sendMessage(chatId, 'There was an error sending your link, please try again later')
           } 
