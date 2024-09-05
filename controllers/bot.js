@@ -20,10 +20,10 @@ bot.on('message', async (msg) => {
       const post = await instaScrapper(msg.text)
       console.log(post);
       const chatId = msg.chat.id;
+      opts = {
+        "reply_to_message_id": msg.message_id
+      }
       if (post.length > 0) {
-        opts = {
-          "reply_to_message_id": msg.message_id
-        }
         post.forEach(media => {
           if (media.type === 'image') {
             bot.sendPhoto(chatId, media.link, opts);
@@ -31,15 +31,15 @@ bot.on('message', async (msg) => {
           else if (media.type === 'video') {
             bot.sendVideo(chatId, media.link, opts);
           } else {
-            bot.sendMessage(chatId, 'There was an error sending your link, please try again later')
+            bot.sendMessage(chatId, 'There was an error sending your link, please try again later', opts)
           } 
         })
       } else {
-        bot.sendMessage(chatId, 'Could not find the media for that link.')
+        bot.sendMessage(chatId, 'Could not find the media for that link.', opts)
       }
     } catch (err) {
       console.log(err);
-      bot.sendMessage(chatId, 'An error occurred while processing the link. Try again!')
+      bot.sendMessage(chatId, 'An error occurred while processing the link. Try again!', opts)
     }
   }
 
